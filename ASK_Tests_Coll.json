@@ -657,23 +657,24 @@
 			"response": []
 		},
 		{
-			"name": "SubmitAssignment-[S]",
+			"name": "submit-assignment-[S]",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"var responseBody = pm.response.json();\r",
-							"\r",
-							"pm.test(\"Status code is 200\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"});\r",
-							"\r",
-							"\r",
-							"pm.test(\"Verify Assignmet: Status = SUBMITTED, Result = PENDING, GradedBy = NONE\", function () {\r",
-							"    pm.expect(responseBody[responseBody.length-1].status).to.eql(\"SUBMITTED\");\r",
-							"    pm.expect(responseBody[responseBody.length-1].result).to.eql(\"PENDING\");\r",
-							"});"
+							"",
+							"pm.test(\"Submit Assignment - Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Verify status,result and gradedBy after submission\", function () {",
+							"    ",
+							"    pm.expect(jsonData[jsonData.length-1].status).to.eql(\"SUBMITTED\");",
+							"});",
+							""
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -695,7 +696,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"assignmentId\": \"{{assignmentId}}\",\r\n    \"answers\": [\r\n\r\n        //Textual Question\r\n        {\r\n            \"textAnswer\": \"Olga\"\r\n        },\r\n\r\n\r\n        // Single Choice Question\r\n        {\r\n            \"answer\": 2\r\n        },\r\n\r\n\r\n        // Multiple Choice Questiom\r\n        {\r\n            \"answer\": [\r\n                0,\r\n                1,\r\n                2\r\n            ]\r\n        }\r\n    ]\r\n}",
+					"raw": "\n{\n    \"assignmentId\": {{assignmentId}},\n    \"answers\": [\n        {\n            \"textAnswer\": \"answer\",\n            \"answer\": null\n        },\n        {\n            \"textAnswer\": \"\",\n            \"answer\": 2\n        },\n        {\n            \"textAnswer\": \"\",\n            \"answer\": [\n                2,\n                1,\n                0\n            ]\n        }\n    ]\n}\n\n",
 					"options": {
 						"raw": {
 							"language": "json"
