@@ -1,0 +1,1339 @@
+{
+	"info": {
+		"_postman_id": "ca5023b1-3af3-4207-8df8-4046a4bce009",
+		"name": "ASK_Tests _Jenkins",
+		"description": "End to End ASK application API Testing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15997805",
+		"_collection_link": "https://www.postman.com/olga-pro/workspace/ask-requests/collection/15997805-ca5023b1-3af3-4207-8df8-4046a4bce009?action=share&source=collection_link&creator=15997805"
+	},
+	"item": [
+		{
+			"name": "Sign-in-[S]",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"pm.environment.set(\"studentToken\", jsonData.token);\r",
+							"pm.environment.set(\"studentId\", jsonData.user.id);\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify user's group and role\", function () {\r",
+							"    pm.expect(jsonData.user.group).to.eql(\"ABC123\");\r",
+							"    pm.expect(jsonData.user.role).to.eql(\"STUDENT\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"{{studentEmail}}\",\r\n  \"password\": \"{{studentPassword}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/sign-in",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"sign-in"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Sign-in-[T]",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"pm.environment.set(\"teacherToken\", jsonData.token);\r",
+							"pm.environment.set(\"teacherId\", jsonData.user.id);\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Verify user's group and role\", function () {\r",
+							"    pm.expect(jsonData.user.group).to.eql(\"ABC123\");\r",
+							"    pm.expect(jsonData.user.role).to.eql(\"TEACHER\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"{{teacherEmail}}\",\r\n  \"password\": \"{{teacherPasswod}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/sign-in",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"sign-in"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateNewQuiz-[T]- with name 'Opro Quiz'",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"var jsonData = pm.response.json();\r",
+							"pm.environment.set(\"quizId\", jsonData.id);\r",
+							"\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"//   Extract today's DateTimeString\r",
+							"const moment = require('moment');\r",
+							"// var created = moment(createdAt);\r",
+							"// var today = moment();\r",
+							"\r",
+							"\r",
+							"pm.test(\"Quiz Date Creation equals Today's date\",function(){\r",
+							"const todayDateTimeString = moment();\r",
+							"// Create a Date object from the string\r",
+							"const todayDateObject = new Date(todayDateTimeString);\r",
+							"// Extract the date part using toDateString()\r",
+							"const todayDateOnly = todayDateObject.toDateString(); \r",
+							"// console.log(todayDateOnly); \r",
+							"const createdDateTimeString = jsonData.createdAt;\r",
+							"// Create a Date object from the string\r",
+							"const createdDateObject = new Date(createdDateTimeString);\r",
+							"// Extract the date part using toDateString()\r",
+							"const createdDateOnly = createdDateObject.toDateString(); \r",
+							"// console.log(createdDateOnly); \r",
+							"pm.expect(todayDateOnly).to.eql(createdDateOnly);\r",
+							"\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"// pm.test(\"Quiz Time creation  equals Current time\", function () {\r",
+							"// function getTimeFromDateString(dateTimeString) {\r",
+							"//   const date = new Date(dateTimeString);\r",
+							"//   return date.toLocaleTimeString();\r",
+							"// }\r",
+							"// const creationDateTimeString = jsonData.createdAt;\r",
+							"// const quizCreationTime = getTimeFromDateString(creationDateTimeString); \r",
+							"// const currentDateTimeString = moment();\r",
+							"// const currentTime = getTimeFromDateString(currentDateTimeString);\r",
+							"// console.log(quizCreationTime);\r",
+							"// console.log(currentTime);\r",
+							"// pm.expect(quizCreationTime).to.eql(currentTime);\r",
+							"// });\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{teacherToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"{{quizName}}\",\r\n  \"totalScore\": 18,\r\n  \"passingPercentage\": 75,\r\n  \"showStopperQuestion\": 1,\r\n  \"questions\": [\r\n    {\r\n      \"type\": \"TEXTUAL\",\r\n      \"question\": \"What is your name?\",\r\n      \"score\": 5\r\n    },\r\n    {\r\n      \"type\": \"SINGLE_CHOICE\",\r\n      \"question\": \"Which city is city largest in California?\",\r\n      \"score\": 7,\r\n      \"answer\": 2,\r\n      \"hasOtherOption\": false,\r\n      \"options\": [\r\n        \"San Francisco\",\r\n        \"Sacramento\",\r\n        \"Los Angeles\",\r\n        \"Redding\"\r\n      ]\r\n    },\r\n    {\r\n      \"type\": \"MULTIPLE_CHOICE\",\r\n      \"question\": \"Who was apple founded by?\",\r\n      \"score\": 6,\r\n      \"answers\": [\r\n        0,\r\n        1,\r\n        2\r\n      ],\r\n      \"hasOtherOption\": true,\r\n      \"options\": [\r\n        \"Steve Jobs\",\r\n        \"Steve Wozniak\",\r\n        \"Ronald Wayne\",\r\n        \"Ronald Reagan\"\r\n      ]\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/quiz",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"quiz"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "All_Quizzes-[T]- Verify Creation of  quiz 'Opro Quiz'",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"var targetQuizName = pm.environment.get(\"quizName\");\r",
+							"    jsonData.forEach(function(item) {\r",
+							"        if (item.name === targetQuizName) {\r",
+							"            foundQuizName = item.name;\r",
+							"        }\r",
+							"    });\r",
+							"\r",
+							"    pm.test('Quiz with name \"Opro Quiz\" was created and has the correct name', function() {\r",
+							"        pm.expect(foundQuizName).to.equal(targetQuizName);\r",
+							"    });\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{teacherToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/quizzes",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"quizzes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update-Quiz-[T]- New Quiz name 'Opro Quiz Updated'",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"  var jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Verify that ApdatedAt is not null\", function () {\r",
+							"pm.expect(jsonData.updatedAt).to.not.eql (null);\r",
+							"});\t\t\t\t\t\t  \r",
+							"\t\t\t\t\t\t\t   \r",
+							"\t\t\t\t\t\t\t\r",
+							"var targetQuizId = pm.environment.get(\"quizId\");\r",
+							"\r",
+							"pm.test(\"Quiz Id equals \" + targetQuizId, function () {\r",
+							"    pm.expect(jsonData.id).to.eql(targetQuizId)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							" "
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{teacherToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"{{newQuizName}}\",\r\n  \"totalScore\": 18,\r\n  \"passingPercentage\": 75,\r\n  \"showStopperQuestion\": 1,\r\n  \"questions\": [\r\n    {\r\n      \"type\": \"TEXTUAL\",\r\n      \"question\": \"What is your name?\",\r\n      \"score\": 5\r\n    },\r\n    {\r\n      \"type\": \"SINGLE_CHOICE\",\r\n      \"question\": \"Which city is city largest in California?\",\r\n      \"score\": 7,\r\n      \"answer\": 2,\r\n      \"hasOtherOption\": false,\r\n      \"options\": [\r\n        \"San Francisco\",\r\n        \"Sacramento\",\r\n        \"Los Angeles\",\r\n        \"Redding\"\r\n      ]\r\n    },\r\n    {\r\n      \"type\": \"MULTIPLE_CHOICE\",\r\n      \"question\": \"Who was apple founded by?\",\r\n      \"score\": 6,\r\n      \"answers\": [\r\n        0,\r\n        1,\r\n        2\r\n      ],\r\n      \"hasOtherOption\": true,\r\n      \"options\": [\r\n        \"Steve Jobs\",\r\n        \"Steve Wozniak\",\r\n        \"Ronald Wayne\",\r\n        \"Ronald Reagan\"\r\n      ]\r\n    }\r\n  ],\r\n  \"id\": {{quizId}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/quiz",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"quiz"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "All_Quizzes-[T]- Verify quiz name updated",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"var newQuizName = pm.environment.get(\"newQuizName\");\r",
+							"var foundQuizName = null;\r",
+							"\r",
+							"    jsonData.forEach(function(item) {\r",
+							"        if (item.name === newQuizName) {\r",
+							"            foundQuizName = item.name;\r",
+							"        }\r",
+							"    });\r",
+							"\r",
+							"    pm.test('Verify \"Opro Quiz\" name was updated to \"Opro Quiz Updated\"', function() {\r",
+							"        pm.expect(foundQuizName).to.equal(newQuizName);\r",
+							"    });\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"\r",
+							"\r",
+							" "
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{teacherToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/quizzes",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"quizzes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create New Assignment-[T]- Assign Quiz to student",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.environment.set(\"assignmentGroupID\", responseBody[0].assignmentGroupID);\r",
+							"pm.environment.set(\"assignmentId\", responseBody[0].id);\r",
+							"\r",
+							"\r",
+							"\r",
+							"pm.test(\"New Assignment Created\", function () {\r",
+							"     pm.expect(responseBody[0].status).to.eql(\"ASSIGNED\");\r",
+							"\t pm.expect(responseBody[0].result).to.eql(\"PENDING\");\r",
+							"\tpm.expect(responseBody[0].gradedBy).to.eql(\"NONE\");\r",
+							"\t\t \r",
+							"     \r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{teacherToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"quizId\": {{quizId}},\r\n  \"userIds\": [{{studentId}}]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/assignment",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"assignment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllAssignments-[T]-Verify the created assignment is in the list",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"var targetAssignmentId = pm.environment.get(\"assignmentId\");\r",
+							"var assignmentFound = false;\r",
+							"responseBody.forEach(function(item) {\r",
+							"    if (item.id === targetAssignmentId) {\r",
+							"        assignmentFound = true;\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							"pm.test('Assignment with ID ' + targetAssignmentId + ' was created', function() {\r",
+							"    pm.expect(assignmentFound).to.be.true;\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{teacherToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/assignments",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"assignments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "MyAssignments-[S]-Verify the assignment is present in the list",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"All items have 'status' = 'ASSIGNED'\", function () {\r",
+							"    jsonData.forEach(function(item) {\r",
+							"        pm.expect(item.status).to.eql(\"ASSIGNED\");\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"\r",
+							"var targetAssignmentId = pm.environment.get(\"assignmentId\");\r",
+							"var assignmentFound = false;\r",
+							"\r",
+							"jsonData.forEach(function(item) {\r",
+							"    if (item.id === targetAssignmentId) {\r",
+							"        assignmentFound = true;\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							"pm.test('Assignment with ID ' + targetAssignmentId + ' was created', function() {\r",
+							"    pm.expect(assignmentFound).to.be.true;\r",
+							"});\r",
+							"\r",
+							"\r",
+							" pm.test(\"The Id of the last assignment equal\" + targetAssignmentId, function () {\r",
+							"pm.expect(targetAssignmentId).to.eql(jsonData[jsonData.length-1].id)\t\t\t\t\t\t\t   \r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"The status =Assigned\", function () {\r",
+							"pm.expect(jsonData[jsonData.length-1].status).to.eql(\"ASSIGNED\")\t\t\t\t\t\t\t   \r",
+							"});\r",
+							"\t\t\t\t\t\t\t\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{studentToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/my-assignments",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"my-assignments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SubmitAssignment-[S]",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Verify Assignmet: Status = SUBMITTED, Result = PENDING, GradedBy = NONE\", function () {\r",
+							"    pm.expect(responseBody[responseBody.length-1].status).to.eql(\"SUBMITTED\");\r",
+							"    pm.expect(responseBody[responseBody.length-1].result).to.eql(\"PENDING\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{studentToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"assignmentId\": \"{{assignmentId}}\",\r\n    \"answers\": [\r\n\r\n        //Textual Question\r\n        {\r\n            \"textAnswer\": \"Olga\"\r\n        },\r\n\r\n\r\n        // Single Choice Question\r\n        {\r\n            \"answer\": 2\r\n        },\r\n\r\n\r\n        // Multiple Choice Questiom\r\n        {\r\n            \"answer\": [\r\n                0,\r\n                1,\r\n                2\r\n            ]\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/submit-assignment",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"submit-assignment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "MyAssignments-[S]-Verify the assignment was submitted and not in the list",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"var targetAssignmentId = pm.environment.get(\"assignmentId\");\r",
+							"var assignmentFound = false;  \r",
+							"\r",
+							"responseBody.forEach(function(item) {\r",
+							"    if (item.id === targetAssignmentId) {  \r",
+							"        assignmentFound = true;  \r",
+							"    }\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test('Assignment with ID ' + targetAssignmentId + ' was submitted and not in the list of assignments', function() {\r",
+							"    pm.expect(assignmentFound).to.be.false;  \r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{studentToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/my-assignments",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"my-assignments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GradeAssignment-[T]-Verify the assignment was graded by Teacher",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"let requestBody = JSON.parse(pm.request.body.raw);\r",
+							" pm.environment.set(\"teacherComent\", requestBody.summary);\r",
+							"\r",
+							"var targetAssignmentId = pm.environment.get(\"assignmentId\");\r",
+							"var expectedSummary = pm.environment.get(\"teacherComent\");\r",
+							"\r",
+							"\r",
+							"pm.test(\"Verify Assignmet: Status = Graded, Result = Passed, GradedBy = Automatic\", function () {\r",
+							"    pm.expect(responseBody[responseBody.length-1].status).to.eql(\"GRADED\");\r",
+							"    pm.expect(responseBody[responseBody.length-1].result).to.eql(\"PASSED\");\r",
+							"    pm.expect(responseBody[responseBody.length-1].gradedBy).to.eql(\"TEACHER\");\r",
+							"});\r",
+							"\r",
+							"var actualSummary = null;\r",
+							"\r",
+							"responseBody.forEach(function(item) {\r",
+							"    if (item.id === targetAssignmentId) {\r",
+							"        actualSummary = item.summary;\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test('Verify summary for Assignment ID ' + targetAssignmentId, function() {\r",
+							"    pm.expect(actualSummary).to.eql(expectedSummary);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{teacherToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"summary\": \"Graded by Olga Teacher\",\r\n  \"result\": \"PASSED\",\r\n  \"grades\": [\r\n    {\r\n      \"comment\": \"Passed by Teacher\",\r\n      \"additionalScore\": 10\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/assignment/{{assignmentId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"assignment",
+						"{{assignmentId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "MyGrades-[S]",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"My Grades -status: Graded; gradedAt - not null\", function () {\r",
+							"var jsonData = pm.response.json();\r",
+							"pm.expect(jsonData[jsonData.length-1].status).to.eql(\"GRADED\");\r",
+							"pm.expect(jsonData[jsonData.length-1].gradedAt).to.not.eql(null);\r",
+							"});\r",
+							"\t\t\t\t\t\t\t  \r",
+							"\t\t\t\t\t\t\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{studentToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/my-grades",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"my-grades"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteQuizSuccessful-[T]",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code 200\", function () {\r",
+							"     pm.expect(pm.response.code).to.equal(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Success Quiz Deletion\", function () {\r",
+							"   var jsonData = pm.response.json();\r",
+							"   pm.expect(jsonData.status).to.eql(\"success\");\r",
+							"   pm.expect(jsonData.message).to.eql(\"Quiz was deleted\")\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{teacherToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/quiz/{{quizId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"quiz",
+						"{{quizId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteAssignment-[T]",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify Message 'Assignment was deleted' \", function () {\r",
+							"   \r",
+							"     pm.expect(responseBody.message).to.eql(\"Assignment was deleted\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{teacherToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/assignment/{{assignmentGroupID}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"assignment",
+						"{{assignmentGroupID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ChangeUserName[T]",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Change User Name \", function(){\r",
+							"pm.expect(jsonData.message).to.eql(\"User name was updated\")\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{teacherToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Olga Student\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/change-name/{{studentId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"change-name",
+						"{{studentId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ChangeUserGroup[T]",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Change User Group \", function(){\r",
+							"pm.expect(jsonData.message).to.eql(\"User group was updated\")\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{teacherToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"group\": \"ABC123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/change-group/{{studentId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"change-group",
+						"{{studentId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ChangeName[S]",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responceBody = pm.response.json();\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Student Change Name\", function () {\r",
+							"    pm.expect(responceBody.message).to.eql(\"User name was updated\")\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{studentToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n\r\n{\r\n  \"newName\": \"Olga Student\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/settings/change-name",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"settings",
+						"change-name"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ChangePassword[S]",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Student Change Password\", function () {\r",
+							"    pm.expect(jsonData.message).to.eql(\"User's password was changed\")\r",
+							"\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{studentToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"password\":\"{{studentPassword}}\",\r\n  \"newPassword\": \"Oprostudent_123456\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/settings/change-password",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"settings",
+						"change-password"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ChangePassword[T]",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Teacher Change Password\", function () {\r",
+							"    pm.expect(jsonData.message).to.eql(\"User's password was changed\")\r",
+							"\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{teacherToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"password\":\"{{teacherPasswod}}\",\r\n  \"newPassword\": \"Olgateacher_123456\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/settings/change-password",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"settings",
+						"change-password"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
